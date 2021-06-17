@@ -67,7 +67,7 @@ class ImpfterminService():
             except RuntimeError as exc:
                 self.log.error(str(exc))
                 self.log.info("Erneuter Versuch in 30 Sekunden")
-                time.sleep(30)
+                time.sleep(20)
 
         # Ein "Codepoint" ist ein dict, das einen Vermittlungscode ("code")
         # und den Zeitpunkt ("next_use") enthält, zu dem der Code frühestens
@@ -322,7 +322,7 @@ class ImpfterminService():
             driver.add_cookie(queue_cookie)
 
             # Seite neu laden
-            time.sleep(5)
+            time.sleep(3)
             driver.get(location)
             driver.refresh()
 
@@ -401,7 +401,7 @@ class ImpfterminService():
             # Chars einzeln eingeben mit kleiner Pause
             for char in subcode:
                 input_field.send_keys(char)
-                time.sleep(randint(500, 1000) / 1000)
+                time.sleep(randint(300, 800) / 1000)
 
         # Klick auf "Termin suchen"
         button_xpath = "//app-corona-vaccination-yes//button[@type=\"submit\"]"
@@ -418,14 +418,14 @@ class ImpfterminService():
         # Zweiter Klick-Versuch, falls Meldung "Es ist ein unerwarteter Fehler aufgetreten" erscheint
         answer_xpath = "//app-corona-vaccination-yes//span[@class=\"text-pre-wrap\"]"
         try:
-            time.sleep(0.5)
+            time.sleep(0.4)
             element = driver.find_element_by_xpath(answer_xpath)
             if element.text == "Es ist ein unerwarteter Fehler aufgetreten":
                 action.click(button).perform()
         except Exception as e:
             pass
 
-        time.sleep(1.5)
+        time.sleep(1.2)
 
     def driver_get_cookies(self, driver, url, manual):
         # Erstelle zufälligen Vermittlungscode für die Cookie-Generierung
@@ -439,7 +439,7 @@ class ImpfterminService():
             self.log.warn(
                 "Du hast jetzt 30 Sekunden Zeit möglichst viele Elemente im Chrome Fenster "
                 "anzuklicken. Das Fenster schließt sich automatisch.")
-            time.sleep(30)
+            time.sleep(21)
 
         required = ["bm_sz", "akavpau_User_allowed"]
         optional = ["bm_sv", "bm_mi", "ak_bmsc", "_abck"]
@@ -487,14 +487,14 @@ class ImpfterminService():
 
         # Termin auswählen
         try:
-            time.sleep(3)
+            time.sleep(2)
             button_xpath = '//*[@id="itsSearchAppointmentsModal"]/div/div/div[2]/div/div/form/' \
                            'div[1]/div[2]/label/div[2]/div'
             button = WebDriverWait(driver, 1).until(
                 EC.element_to_be_clickable((By.XPATH, button_xpath)))
             action = ActionChains(driver)
             action.move_to_element(button).click().perform()
-            time.sleep(.5)
+            time.sleep(.4)
         except:
             self.log.error("Termine können nicht ausgewählt werden")
             try:
@@ -514,7 +514,7 @@ class ImpfterminService():
                 EC.element_to_be_clickable((By.XPATH, button_xpath)))
             action = ActionChains(driver)
             action.move_to_element(button).click().perform()
-            time.sleep(.5)
+            time.sleep(.4)
         except:
             self.log.error("Termine können nicht ausgewählt werden (Button)")
             pass
@@ -527,7 +527,7 @@ class ImpfterminService():
                 EC.element_to_be_clickable((By.XPATH, button_xpath)))
             action = ActionChains(driver)
             action.move_to_element(button).click().perform()
-            time.sleep(.5)
+            time.sleep(.4)
         except:
             self.log.error("1. Daten können nicht erfasst werden")
             pass
@@ -614,7 +614,7 @@ class ImpfterminService():
                 EC.element_to_be_clickable((By.XPATH, button_xpath)))
             action = ActionChains(driver)
             action.move_to_element(button).click().perform()
-            time.sleep(.7)
+            time.sleep(.6)
         except:
             self.log.error("Button ÜBERNEHMEN kann nicht gedrückt werden")
             pass
@@ -630,7 +630,7 @@ class ImpfterminService():
         except:
             self.log.error("Button Termin buchen kann nicht gedrückt werden")
             pass
-        time.sleep(3)
+        time.sleep(2)
 
         if "Ihr Termin am" not in str(driver.page_source):
             raise BookingError()
@@ -985,7 +985,7 @@ class ImpfterminService():
             except RequestException as exc:
                 self.log.error(f"Vermittlungscode kann nicht angefragt werden: {str(exc)}")
                 self.log.info("Erneuter Versuch in 30 Sekunden")
-                time.sleep(30)
+                time.sleep(22)
                 continue  # Neuer Versuch in nächster Iteration
 
             if res.status_code == 429:
@@ -1004,7 +1004,7 @@ class ImpfterminService():
                     "Code kann nicht angefragt werden: "
                     f"{res.status_code} {res.text}")
                 self.log.info("Erneuter Versuch in 30 Sekunden")
-                time.sleep(30)
+                time.sleep(22)
                 continue  # Neuer Versuch in nächster Iteration
 
             try:
@@ -1059,7 +1059,7 @@ class ImpfterminService():
                 driver.add_cookie(queue_cookie)
 
             # Seite des Impzentrums laden
-            time.sleep(5)
+            time.sleep(4)
             driver.get(f"{url}impftermine/service?plz={plz_impfzentrum}")
             driver.refresh()
 
@@ -1147,7 +1147,7 @@ class ImpfterminService():
                                   check_p)
             for char in data['email']:
                 input_field.send_keys(char)
-                time.sleep(randint(500, 1000) / 1000)
+                time.sleep(randint(300, 800) / 1000)
 
             self.log.info("E-Mail Adresse eingegeben.")
             time.sleep(0.5)
@@ -1174,7 +1174,7 @@ class ImpfterminService():
                                   check_p)
             for char in data['phone'][3:]:
                 input_field.send_keys(char)
-                time.sleep(randint(500, 1000) / 1000)
+                time.sleep(randint(300, 800) / 1000)
 
             self.log.info("Telefonnummer eingegeben.")
             time.sleep(0.5)
