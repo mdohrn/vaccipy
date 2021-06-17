@@ -467,7 +467,7 @@ def main():
         "-s",
         "--retry-sec",
         type=int,
-        default=60,
+        default=1,
         help="Wartezeit zwischen zwei Versuchen (in Sekunden)")
 
     parser_code = subparsers.add_parser(
@@ -484,7 +484,7 @@ def main():
     if not hasattr(args, "read_only"):
         args.read_only = False
     if not hasattr(args, "retry_sec"):
-        args.retry_sec = 60
+        args.retry_sec = 1
     if not hasattr(args, "configure_notifications"):
         args.configure_notifications = False
 
@@ -551,9 +551,6 @@ def main():
                         f"--read-only {'de' if not args.read_only else ''}aktiviert.")
                 elif extended_settings and option == "s":
                     args.retry_sec = int(input("> --retry-sec="))
-                    if args.retry_sec<30:
-                        print("[RETRY-SEC] Um die Server nicht übermäßig zu belasten, wurde der Wert auf 30 Sekunden gesetzt")
-                        args.retry_sec = 30
                 elif extended_settings and option == "n":
                     new_args = copy.copy(args)
                     new_args.configure_notifications = not new_args.configure_notifications
